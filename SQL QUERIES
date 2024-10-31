@@ -1,0 +1,38 @@
+Q! Provide the list of markets in which customer "Atliq Exclusive" operates its
+business in the APAC region.
+
+Query -> SELECT market from dim_customer 
+where region ="APAC" and customer = "Atliq Exclusive";
+
+Q2. What is the percentage of unique product increase in 2021 vs. 2020? The
+final output contains these fields,
+unique_products_2020
+unique_products_2021
+percentage_chg
+
+Query -> select t1.m as unique_prod2020,t2.n as unique_prod_2021, round( (t2.n-t1.m)*100/t1.m ,2 )as percentage_change
+FROM 
+((SELECT count(distinct(product_code)) AS m FROM fact_gross_price
+where fiscal_year=2020) t1,
+(SELECT count(distinct(product_code)) as n FROM fact_gross_price
+where fiscal_year=2021) T2);
+
+Q3. Provide a report with all the unique product counts for each segment and
+sort them in descending order of product counts. The final output contains
+2 fields,
+segment
+product_count
+
+Query -> SELECT segment,count(distinct(product)) as product_count
+from dim_product
+group by segment 
+order by product_count desc;
+
+Q4. Follow-up: Which segment had the most increase in unique products in
+2021 vs 2020? The final output contains these fields,
+segment
+product_count_2020
+product_count_2021
+difference
+
+Query ->
