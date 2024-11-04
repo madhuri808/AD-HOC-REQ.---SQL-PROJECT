@@ -56,4 +56,22 @@ product_code
 product
 manufacturing_cost
 
-Query -> 
+Query -> (select distinct(p.product_code) as product_code,p.product as product,m.manufacturing_cost as mfg_cost
+from dim_product p join fact_manufacturing_cost m using(product_code)
+order by mfg_cost desc limit 5)
+union all
+(select distinct(p.product_code) as product_code,p.product as product,m.manufacturing_cost as mfg_cost
+from dim_product p join fact_manufacturing_cost m using(product_code)
+order by mfg_cost limit 5);
+
+Q6.6. Generate a report which contains the top 5 customers who received an
+average high pre_invoice_discount_pct for the fiscal year 2021 and in the
+Indian market. The final output contains these fields,
+customer_code
+customer
+average_discount_percentage
+
+Query -> select c.customer_code,c.customer,p.pre_invoice_discount_pct as discount_percentage
+from dim_customer c join fact_pre_invoice_deductions p
+using(customer_code) where market="India" and p.fiscal_year=2021 
+order by discount_percentage desc limit 5;
