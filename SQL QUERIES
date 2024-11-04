@@ -64,7 +64,7 @@ union all
 from dim_product p join fact_manufacturing_cost m using(product_code)
 order by mfg_cost limit 5);
 
-Q6.6. Generate a report which contains the top 5 customers who received an
+Q6. Generate a report which contains the top 5 customers who received an
 average high pre_invoice_discount_pct for the fiscal year 2021 and in the
 Indian market. The final output contains these fields,
 customer_code
@@ -75,3 +75,27 @@ Query -> select c.customer_code,c.customer,p.pre_invoice_discount_pct as discoun
 from dim_customer c join fact_pre_invoice_deductions p
 using(customer_code) where market="India" and p.fiscal_year=2021 
 order by discount_percentage desc limit 5;
+
+Q7. Get the complete report of the Gross sales amount for the customer “Atliq
+Exclusive” for each month. This analysis helps to get an idea of low and
+high-performing months and take strategic decisions.
+The final report contains these columns:
+Month
+Year
+Gross sales Amount
+
+Query -> select monthname(date) as month,s.fiscal_year,
+round(sum(g.gross_price*s.sold_quantity),2) as gross_sales_price
+from fact_sales_monthly s 
+join fact_gross_price g using(product_code) 
+join dim_customer c using(customer_code)
+where c.customer="Atliq Exclusive"
+group by month,s.fiscal_year
+order by s.fiscal_year;
+
+Q8. In which quarter of 2020, got the maximum total_sold_quantity? The final
+output contains these fields sorted by the total_sold_quantity,
+Quarter
+total_sold_quantity
+
+Query -> 
