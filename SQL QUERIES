@@ -35,20 +35,20 @@ product_count_2020
 product_count_2021
 difference
 
-Query -> with cte1 as(
+Query -> wwith cte1 as(
 select p.segment as a_seg ,count(distinct(f.product_code)) as pc_20
 from dim_product p join fact_sales_monthly f 
 using (product_code)
 group by segment,f.fiscal_year
 having f.fiscal_year="2020"),
 cte2 as (
-select p.segment as b_seg ,count(distinct(f.product_code)) as pc_21
+select p.segment b_seg,count(distinct(f.product_code)) as pc_21
 from dim_product p join fact_sales_monthly f 
 using (product_code)
 group by segment,f.fiscal_year
 having f.fiscal_year="2021")
-select cte1.a_seg,cte1.pc_20,cte2.pc_21,(cte2.pc_21-cte1.pc_20) as difference
-from cte1 join cte2 on cte1.a_seg=cte2.b_seg;
+select cte1.a_seg as segment ,cte1.pc_20 as product_count_2020,cte2.pc_21 as product_count_2021,(cte2.pc_21-cte1.pc_20) as difference
+from cte1 join cte2 on cte1.a_seg=cte2.b_seg order by difference desc;
 
 Q5. Get the products that have the highest and lowest manufacturing costs.
 The final output should contain these fields,
