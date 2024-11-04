@@ -118,4 +118,24 @@ channel
 gross_sales_mln
 percentage
 
-Query ->
+Query -> with cte1 as
+(select c.channel as channel,
+concat(round(sum(g.gross_price*s.sold_quantity)/1000000,2)," M") as gross_sales_mln
+from fact_sales_monthly s 
+join fact_gross_price g using(product_code) 
+join dim_customer c using(customer_code)
+where g.fiscal_year
+group by c.channel)
+select channel,gross_sales_mln,concat(round((gross_sales_mln*100)/total,2)," %") as percentage
+from ((select sum(gross_sales_mln) as total from cte1) a, (select * from cte1) b)
+order by percentage desc;
+
+Q10. Get the Top 3 products in each division that have a high
+total_sold_quantity in the fiscal_year 2021? The final output contains these fields,
+division
+product_code
+product
+total_sold_quantity
+rank_order
+
+Query -> 
