@@ -138,4 +138,17 @@ product
 total_sold_quantity
 rank_order
 
-Query -> 
+Query -> with cte1 as (select p.division as d,s.product_code as pc,
+p.product as p ,sum(s.sold_quantity) as tsq
+from dim_product p join fact_sales_monthly s
+using(product_code)
+group by s.product_code,p.product,p.division),
+cte2 as(select d,pc,p,tsq,
+rank() over(partition by d order by tsq desc) as rnk
+from cte1)
+select cte1.d as division,cte1.pc as product_code,
+cte1.p as product,cte1.tsq as total_sold_quantity,cte2.rnk as rank_order
+from cte1 join cte2 using(pc)
+where cte2.rnk in (1,2,3);
+ 
+
