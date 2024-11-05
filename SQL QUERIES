@@ -35,7 +35,7 @@ product_count_2020
 product_count_2021
 difference
 
-Query -> wwith cte1 as(
+Query -> with cte1 as(
 select p.segment as a_seg ,count(distinct(f.product_code)) as pc_20
 from dim_product p join fact_sales_monthly f 
 using (product_code)
